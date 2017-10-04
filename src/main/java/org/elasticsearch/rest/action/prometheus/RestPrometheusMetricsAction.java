@@ -18,8 +18,6 @@ public class RestPrometheusMetricsAction extends BaseRestHandler {
 
     final static String PLUGIN_REST_ENDPOINT = "/_prometheus/metrics";
 
-    private final static ESLogger logger = ESLoggerFactory.getLogger(RestPrometheusMetricsAction.class.getSimpleName());
-
     private PrometheusMetricsCollector collector;
 
     @Inject
