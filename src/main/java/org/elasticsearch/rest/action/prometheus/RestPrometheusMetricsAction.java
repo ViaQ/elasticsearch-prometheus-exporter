@@ -1,18 +1,19 @@
 package org.elasticsearch.rest.action.prometheus;
 
 import org.compuscene.metrics.prometheus.PrometheusMetricsCollector;
+import org.elasticsearch.action.PrometheusMetricsRequest;
+import org.elasticsearch.action.PrometheusMetricsResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.inject.Inject;
-import org.elasticsearch.common.logging.ESLogger;
-import org.elasticsearch.common.logging.ESLoggerFactory;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.settings.SettingsFilter;
 import org.elasticsearch.rest.*;
+import org.elasticsearch.rest.action.support.RestToXContentListener;
 
 import static org.elasticsearch.rest.RestRequest.Method.GET;
 import static org.elasticsearch.rest.RestStatus.INTERNAL_SERVER_ERROR;
 import static org.elasticsearch.rest.RestStatus.OK;
 
+import static org.elasticsearch.action.PrometheusMetricsAction.INSTANCE;
 
 public class RestPrometheusMetricsAction extends BaseRestHandler {
 
@@ -30,6 +31,10 @@ public class RestPrometheusMetricsAction extends BaseRestHandler {
     public void handleRequest(final RestRequest request, final RestChannel channel, final Client client) {
         logger.trace(String.format("Received request for Prometheus metrics from %s", request.getRemoteAddress().toString()));
 
+        PrometheusMetricsRequest metrics = new PrometheusMetricsRequest();
+        client.execute(INSTANCE, metrics, new RestToXContentListener<PrometheusMetricsResponse>(channel));
+
+        /*
         if (collector == null)
             collector = new PrometheusMetricsCollector(client);
 
@@ -40,5 +45,6 @@ public class RestPrometheusMetricsAction extends BaseRestHandler {
         } catch (java.io.IOException e) {
             channel.sendResponse(new BytesRestResponse(INTERNAL_SERVER_ERROR, ""));
         }
+        */
     }
 }

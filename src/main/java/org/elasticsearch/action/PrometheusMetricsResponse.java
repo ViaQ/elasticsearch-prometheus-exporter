@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class PrometheusMetricsResponse extends ActionResponse implements ToXContent {
     @Override
-    public XContentBuilder toXContent(XContentBuilder xContentBuilder, Params params) throws IOException {
-        return null;
+    public XContentBuilder toXContent(XContentBuilder builder, Params params) throws IOException {
+        return builder;
     }
 }
