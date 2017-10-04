@@ -21,7 +21,7 @@ public class RestPrometheusMetricsAction extends BaseRestHandler {
     private PrometheusMetricsCollector collector;
 
     @Inject
-    public RestPrometheusMetricsAction(Settings settings, Client client, RestController controller, SettingsFilter settingsFilter) {
+    public RestPrometheusMetricsAction(Settings settings, RestController controller, Client client) {
         super(settings, controller, client);
         controller.registerHandler(GET, PLUGIN_REST_ENDPOINT, this);
     }
