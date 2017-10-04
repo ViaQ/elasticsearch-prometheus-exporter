@@ -1,4 +1,4 @@
-package org.elasticsearch.rest.prometheus;
+package org.elasticsearch.rest.action.prometheus;
 
 import org.compuscene.metrics.prometheus.PrometheusMetricsCollector;
 import org.elasticsearch.client.Client;
@@ -16,6 +16,8 @@ import static org.elasticsearch.rest.RestStatus.OK;
 
 public class RestPrometheusMetricsAction extends BaseRestHandler {
 
+    final static String PLUGIN_REST_ENDPOINT = "/_prometheus/metrics";
+
     private final static ESLogger logger = ESLoggerFactory.getLogger(RestPrometheusMetricsAction.class.getSimpleName());
 
     private PrometheusMetricsCollector collector;
@@ -23,7 +25,7 @@ public class RestPrometheusMetricsAction extends BaseRestHandler {
     @Inject
     public RestPrometheusMetricsAction(Settings settings, Client client, RestController controller, SettingsFilter settingsFilter) {
         super(settings, controller, client);
-        controller.registerHandler(GET, "/_prometheus/metrics", this);
+        controller.registerHandler(GET, PLUGIN_REST_ENDPOINT, this);
     }
 
     @Override

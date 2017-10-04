@@ -7,7 +7,7 @@ import io.prometheus.client.Summary;
 import io.prometheus.client.exporter.common.TextFormat;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.ESLoggerFactory;
-import org.elasticsearch.rest.prometheus.RestPrometheusMetricsAction;
+import org.elasticsearch.rest.action.prometheus.RestPrometheusMetricsAction;
 
 import java.io.IOException;
 import java.io.StringWriter;
