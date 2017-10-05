@@ -1,6 +1,8 @@
 package org.elasticsearch.action;
 
-public class PrometheusMetricsRequest extends ActionRequest<PrometheusMetricsRequest> {
+import org.elasticsearch.action.support.master.MasterNodeReadRequest;
+
+public class PrometheusMetricsRequest extends MasterNodeReadRequest<PrometheusMetricsRequest> {
 
 //    public PrometheusMetricsRequest() {
 //    }

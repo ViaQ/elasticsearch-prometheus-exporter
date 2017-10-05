@@ -34,7 +34,6 @@ public class SmokeElasticsearchIntegTestCase extends ESWithPrometheusExporterPlu
 
         this.logger.info("Nodes info: \n{}", nodeInfo.toString());
 
-        /*
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(nodeInfo.toString());
         JsonNode nodes = rootNode.path("nodes");
@@ -52,7 +51,6 @@ public class SmokeElasticsearchIntegTestCase extends ESWithPrometheusExporterPlu
             }
 
         }
-        */
 
     }
 }

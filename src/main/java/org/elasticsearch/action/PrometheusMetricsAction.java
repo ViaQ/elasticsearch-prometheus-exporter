@@ -5,7 +5,7 @@ import org.elasticsearch.client.ElasticsearchClient;
 public class PrometheusMetricsAction extends Action<PrometheusMetricsRequest, PrometheusMetricsResponse, PrometheusRequestBuilder> {
 
     public static final PrometheusMetricsAction INSTANCE = new PrometheusMetricsAction();
-    public static final String NAME = "cluster:data/read/metrics"; // TODO: find good name
+    public static final String NAME = "cluster:monitor/prometheus/metrics";
 
     private PrometheusMetricsAction() {
         super(NAME);
