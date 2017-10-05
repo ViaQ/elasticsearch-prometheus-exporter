@@ -36,12 +36,26 @@ public class TransportPrometheusMetricsAction extends HandledTransportAction<Pro
 
     private class AsyncAction {
 
-        private AsyncAction(PrometheusMetricsRequest request, ActionListener<PrometheusMetricsResponse> listener) {
+        private final PrometheusMetricsRequest request;
+        private final ActionListener<PrometheusMetricsResponse> listener;
 
+        private AsyncAction(PrometheusMetricsRequest request, ActionListener<PrometheusMetricsResponse> listener) {
+            this.request = request;
+            this.listener = listener;
         }
 
         private void start() {
-            logger.info("We are here!");
+//            if (logger.isTraceEnabled()) {
+                logger.info("Starting action");
+//            }
+            listener.onResponse(buildResponse());
+        }
+
+        protected PrometheusMetricsResponse buildResponse() {
+//            if (logger.isTraceEnabled()) {
+                logger.info("Return response");
+//            }
+            return new PrometheusMetricsResponse();
         }
     }
 }
