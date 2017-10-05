@@ -2,9 +2,9 @@ package org.elasticsearch.action;
 
 import org.elasticsearch.action.support.master.MasterNodeReadRequest;
 
-public class PrometheusMetricsRequest extends MasterNodeReadRequest<PrometheusMetricsRequest> {
+public class NodePrometheusMetricsRequest extends MasterNodeReadRequest<NodePrometheusMetricsRequest> {
 
-//    public PrometheusMetricsRequest() {
+//    public NodePrometheusMetricsRequest() {
 //    }
 
     @Override

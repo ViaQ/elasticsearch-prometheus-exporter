@@ -1,8 +1,8 @@
 package org.elasticsearch.plugin.prometheus;
 
 import org.elasticsearch.action.ActionModule;
-import org.elasticsearch.action.PrometheusMetricsAction;
-import org.elasticsearch.action.TransportPrometheusMetricsAction;
+import org.elasticsearch.action.NodePrometheusMetricsAction;
+import org.elasticsearch.action.TransportNodePrometheusMetricsAction;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.Loggers;
@@ -33,7 +33,7 @@ public class PrometheusExporterPlugin extends Plugin {
     }
 
     public void onModule(ActionModule actionModule) {
-        actionModule.registerAction(PrometheusMetricsAction.INSTANCE, TransportPrometheusMetricsAction.class);
+        actionModule.registerAction(NodePrometheusMetricsAction.INSTANCE, TransportNodePrometheusMetricsAction.class);
     }
 
     public void onModule(RestModule restModule) {
