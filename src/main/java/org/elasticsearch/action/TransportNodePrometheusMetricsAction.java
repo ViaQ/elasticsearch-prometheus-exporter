@@ -45,7 +45,8 @@ public class TransportNodePrometheusMetricsAction extends HandledTransportAction
 
         private void start() {
 //            if (logger.isTraceEnabled()) {
-                logger.info("Starting action");
+                logger.info("Start action");
+                logger.info("Cluster name: [{}], Node name: [{}]", clusterName.toString(), clusterService.localNode().name());
 //            }
             listener.onResponse(buildResponse());
         }
@@ -53,6 +54,7 @@ public class TransportNodePrometheusMetricsAction extends HandledTransportAction
         protected NodePrometheusMetricsResponse buildResponse() {
 //            if (logger.isTraceEnabled()) {
                 logger.info("Return response");
+                logger.info("Cluster name: [{}], Node name: [{}]", clusterName.toString(), clusterService.localNode().name());
 //            }
             return new NodePrometheusMetricsResponse();
         }
