@@ -107,12 +107,8 @@ public class PrometheusMetricsCatalog {
     }
 
     public String toTextFormat() throws IOException {
-        try {
-            Writer writer = new StringWriter();
-            TextFormat.write004(writer, registry.metricFamilySamples());
-            return writer.toString();
-        } catch (IOException e) {
-            throw e;
-        }
+        Writer writer = new StringWriter();
+        TextFormat.write004(writer, registry.metricFamilySamples());
+        return writer.toString();
     }
 }

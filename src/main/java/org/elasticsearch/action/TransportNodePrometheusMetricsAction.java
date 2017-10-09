@@ -1,5 +1,7 @@
 package org.elasticsearch.action;
 
+import org.elasticsearch.cluster.ClusterName;
+import org.elasticsearch.prometheus.PrometheusMetricsCollectorService;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
@@ -8,8 +10,6 @@ import org.elasticsearch.action.admin.cluster.node.stats.NodesStatsResponse;
 import org.elasticsearch.action.support.ActionFilters;
 import org.elasticsearch.action.support.HandledTransportAction;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.cluster.ClusterName;
-import org.elasticsearch.cluster.ClusterService;
 import org.elasticsearch.cluster.metadata.IndexNameExpressionResolver;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
@@ -19,17 +19,20 @@ import org.elasticsearch.transport.TransportService;
 public class TransportNodePrometheusMetricsAction extends HandledTransportAction<NodePrometheusMetricsRequest, NodePrometheusMetricsResponse> {
 
     protected final ClusterName clusterName;
-    protected final ClusterService clusterService;
+//    protected final ClusterService clusterService;
+    protected final PrometheusMetricsCollectorService prometheusService;
     protected final Client client;
 
     @Inject
     public TransportNodePrometheusMetricsAction(Settings settings, ClusterName clusterName, ThreadPool threadPool, Client client,
-                                            ClusterService clusterService, TransportService transportService, ActionFilters actionFilters,
-                                                IndexNameExpressionResolver indexNameExpressionResolver) {
+                                                /*ClusterService clusterService,*/ TransportService transportService, ActionFilters actionFilters,
+                                                IndexNameExpressionResolver indexNameExpressionResolver,
+                                                PrometheusMetricsCollectorService prometheusService) {
         super(settings, NodePrometheusMetricsAction.NAME, threadPool, transportService, actionFilters, indexNameExpressionResolver, NodePrometheusMetricsRequest.class);
         this.client = client;
         this.clusterName = clusterName;
-        this.clusterService = clusterService;
+//        this.clusterService = clusterService;
+        this.prometheusService = prometheusService;
     }
 
     @Override
@@ -56,7 +59,8 @@ public class TransportNodePrometheusMetricsAction extends HandledTransportAction
         private void start() {
 //            if (logger.isTraceEnabled()) {
                 logger.info("Start action");
-                logger.info("Cluster name: [{}], Node name: [{}]", clusterName.toString(), clusterService.localNode().name());
+//                logger.info("Cluster name: [{}], Node name: [{}]", clusterName.toString(), clusterService.localNode().name());
+                logger.info("Prometheus Service: [{}]", prometheusService);
 //            }
 
             client.admin().cluster().health(healthRequest, clusterHealthResponseActionListener);
@@ -98,11 +102,11 @@ public class TransportNodePrometheusMetricsAction extends HandledTransportAction
         protected NodePrometheusMetricsResponse buildResponse(ClusterHealthResponse clusterHealth, NodesStatsResponse nodesStats) {
 //            if (logger.isTraceEnabled()) {
                 logger.info("Return response:");
-                logger.info("Cluster name: [{}], Node name: [{}]", clusterName.toString(), clusterService.localNode().name());
+//                logger.info("Cluster name: [{}], Node name: [{}]", clusterName.toString(), clusterService.localNode().name());
                 logger.info("Cluster health [{}]", buildClusterHealthResponse(clusterHealth));
                 logger.info("Nodes Stats [{}]", buildNodesStatsResponse(nodesStats));
 //            }
-            return new NodePrometheusMetricsResponse();
+            return new NodePrometheusMetricsResponse(clusterName, null);
         }
     }
 }

@@ -21,13 +21,21 @@ import org.elasticsearch.transport.TransportStats;
 
 public class PrometheusMetricsCollector {
 
-    private final Client client;
+//    private final Client client;
 
     private String cluster;
     private String node;
 
     private PrometheusMetricsCatalog catalog;
 
+    public PrometheusMetricsCollector (final String clusterName, final String node) {
+        this.cluster = clusterName;
+        this.node = node;
+        catalog = new PrometheusMetricsCatalog(cluster, "es_");
+        registerMetrics();
+    }
+
+        /*
     public PrometheusMetricsCollector(final Client client) {
         this.client = client;
 
@@ -41,6 +49,7 @@ public class PrometheusMetricsCollector {
 
         registerMetrics();
     }
+        */
 
     private void registerMetrics() {
         catalog.registerSummaryTimer("metrics_generate_time_seconds", "Time spent while generating metrics", "node");
@@ -515,6 +524,7 @@ public class PrometheusMetricsCollector {
 
     public void updateMetrics() {
         Summary.Timer timer = catalog.startSummaryTimer("metrics_generate_time_seconds", node);
+        /*
 
         ClusterHealthRequest clusterHealthRequest = new ClusterHealthRequest();
         ClusterHealthResponse clusterHealthResponse = client.admin().cluster().health(clusterHealthRequest).actionGet();
@@ -537,6 +547,7 @@ public class PrometheusMetricsCollector {
         updateThreadPoolMetrics(nodeStats.getThreadPool());
         updateFsMetrics(nodeStats.getFs());
 
+        */
         timer.observeDuration();
     }
 

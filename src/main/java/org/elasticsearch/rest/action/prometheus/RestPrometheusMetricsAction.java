@@ -39,9 +39,9 @@ public class RestPrometheusMetricsAction extends BaseRestHandler {
             @Override
             public RestResponse buildResponse(NodePrometheusMetricsResponse response) throws Exception {
                 StringBuilder sb = new StringBuilder();
+                sb.append("# Prometheus metrics").append("\n");
 //                for (NodePrometheusMetrics node : response) {
-                    sb.append("# Prometheus metrics").append("\n");
-//                    sb.append(node.getMetrics().toString()).append("\n");
+//                    sb.append(node.getMetrics()).append("\n");
 //                }
                 return new BytesRestResponse(RestStatus.OK, sb.toString());
             }

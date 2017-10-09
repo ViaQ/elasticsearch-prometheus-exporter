@@ -1,8 +1,10 @@
 package org.elasticsearch.plugin.prometheus;
 
+import org.elasticsearch.prometheus.PrometheusMetricsCollectorService;
 import org.elasticsearch.action.ActionModule;
 import org.elasticsearch.action.NodePrometheusMetricsAction;
 import org.elasticsearch.action.TransportNodePrometheusMetricsAction;
+import org.elasticsearch.common.component.LifecycleComponent;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.Loggers;
@@ -10,6 +12,9 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.plugins.Plugin;
 import org.elasticsearch.rest.RestModule;
 import org.elasticsearch.rest.action.prometheus.RestPrometheusMetricsAction;
+
+import java.util.Collection;
+import java.util.Collections;
 
 public class PrometheusExporterPlugin extends Plugin {
 
@@ -38,5 +43,14 @@ public class PrometheusExporterPlugin extends Plugin {
 
     public void onModule(RestModule restModule) {
         restModule.addRestAction(RestPrometheusMetricsAction.class);
+    }
+
+//    public Collection<Module> nodeModules() {
+//        return Collections.singletonList(new PrometheusMetricsCollectionModule());
+//    }
+
+    @Override
+    public Collection<Class<? extends LifecycleComponent>> nodeServices() {
+        return Collections.singletonList(PrometheusMetricsCollectorService.class);
     }
 }
