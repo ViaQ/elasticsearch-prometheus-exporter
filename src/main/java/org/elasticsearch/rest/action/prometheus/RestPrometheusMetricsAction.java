@@ -27,9 +27,9 @@ public class RestPrometheusMetricsAction extends BaseRestHandler {
 
     @Override
     public void handleRequest(final RestRequest request, final RestChannel channel, final Client client) {
-//        if (logger.isTraceEnabled()) {
-            logger.info(String.format("Received request for Prometheus metrics from %s", request.getRemoteAddress().toString()));
-//        }
+        if (logger.isTraceEnabled()) {
+            logger.trace(String.format("Received request for Prometheus metrics from %s", request.getRemoteAddress().toString()));
+        }
 
         NodePrometheusMetricsRequest metricsRequest = new NodePrometheusMetricsRequest();
         client.execute(INSTANCE, metricsRequest, new RestResponseListener<NodePrometheusMetricsResponse>(channel) {

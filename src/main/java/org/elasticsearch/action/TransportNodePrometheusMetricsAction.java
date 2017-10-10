@@ -19,19 +19,17 @@ import org.elasticsearch.transport.TransportService;
 public class TransportNodePrometheusMetricsAction extends HandledTransportAction<NodePrometheusMetricsRequest, NodePrometheusMetricsResponse> {
 
     protected final ClusterName clusterName;
-//    protected final ClusterService clusterService;
     protected final PrometheusMetricsCollectorService prometheusService;
     protected final Client client;
 
     @Inject
     public TransportNodePrometheusMetricsAction(Settings settings, ClusterName clusterName, ThreadPool threadPool, Client client,
-                                                /*ClusterService clusterService,*/ TransportService transportService, ActionFilters actionFilters,
+                                                TransportService transportService, ActionFilters actionFilters,
                                                 IndexNameExpressionResolver indexNameExpressionResolver,
                                                 PrometheusMetricsCollectorService prometheusService) {
         super(settings, NodePrometheusMetricsAction.NAME, threadPool, transportService, actionFilters, indexNameExpressionResolver, NodePrometheusMetricsRequest.class);
         this.client = client;
         this.clusterName = clusterName;
-//        this.clusterService = clusterService;
         this.prometheusService = prometheusService;
     }
 
@@ -42,27 +40,19 @@ public class TransportNodePrometheusMetricsAction extends HandledTransportAction
 
     private class AsyncAction {
 
-        private final NodePrometheusMetricsRequest request;
         private final ActionListener<NodePrometheusMetricsResponse> listener;
         private final ClusterHealthRequest healthRequest;
         private final NodesStatsRequest nodesStatsRequest;
         private ClusterHealthResponse clusterHealthResponse;
 
         private AsyncAction(NodePrometheusMetricsRequest request, ActionListener<NodePrometheusMetricsResponse> listener) {
-            this.request = request;
             this.listener = listener;
             this.healthRequest = new ClusterHealthRequest();
             this.nodesStatsRequest = new NodesStatsRequest("_local").all();
-//            this.nodesStatsRequest = new NodesStatsRequest("_local").clear();
+//            this.nodesStatsRequest = new NodesStatsRequest("_local").clear(); // used for testing only
         }
 
         private void start() {
-//            if (logger.isTraceEnabled()) {
-                logger.info("Start action");
-//                logger.info("Cluster name: [{}], Node name: [{}]", clusterName.toString(), clusterService.localNode().name());
-                logger.info("Prometheus Service: [{}]", prometheusService);
-//            }
-
             client.admin().cluster().health(healthRequest, clusterHealthResponseActionListener);
         }
 
@@ -101,18 +91,15 @@ public class TransportNodePrometheusMetricsAction extends HandledTransportAction
 
         protected NodePrometheusMetricsResponse buildResponse(ClusterHealthResponse clusterHealth, NodesStatsResponse nodesStats) {
 
-            NodePrometheusMetricsResponse[] metrics = new NodePrometheusMetricsResponse[1];
             String clusterHealthFormattedText = buildClusterHealthResponse(clusterHealth);
             String nodesStatsFormattedText = buildNodesStatsResponse(nodesStats);
-            metrics[0] = new NodePrometheusMetricsResponse(clusterHealthFormattedText, nodesStatsFormattedText);
+            NodePrometheusMetricsResponse response = new NodePrometheusMetricsResponse(clusterHealthFormattedText, nodesStatsFormattedText);
 
-//            if (logger.isTraceEnabled()) {
-                logger.info("Return response:");
-                logger.info("Cluster health [{}]", clusterHealthFormattedText);
-                logger.info("Nodes Stats [{}]", nodesStatsFormattedText);
-//            }
+            if (logger.isTraceEnabled()) {
+                logger.trace("Return response: [{}]", response);
+            }
 
-            return new NodePrometheusMetricsResponse(clusterHealthFormattedText, nodesStatsFormattedText);
+            return response;
         }
     }
 }
