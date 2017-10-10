@@ -100,13 +100,19 @@ public class TransportNodePrometheusMetricsAction extends HandledTransportAction
         }
 
         protected NodePrometheusMetricsResponse buildResponse(ClusterHealthResponse clusterHealth, NodesStatsResponse nodesStats) {
+
+            NodePrometheusMetricsResponse[] metrics = new NodePrometheusMetricsResponse[1];
+            String clusterHealthFormattedText = buildClusterHealthResponse(clusterHealth);
+            String nodesStatsFormattedText = buildNodesStatsResponse(nodesStats);
+            metrics[0] = new NodePrometheusMetricsResponse(clusterHealthFormattedText, nodesStatsFormattedText);
+
 //            if (logger.isTraceEnabled()) {
                 logger.info("Return response:");
-//                logger.info("Cluster name: [{}], Node name: [{}]", clusterName.toString(), clusterService.localNode().name());
-                logger.info("Cluster health [{}]", buildClusterHealthResponse(clusterHealth));
-                logger.info("Nodes Stats [{}]", buildNodesStatsResponse(nodesStats));
+                logger.info("Cluster health [{}]", clusterHealthFormattedText);
+                logger.info("Nodes Stats [{}]", nodesStatsFormattedText);
 //            }
-            return new NodePrometheusMetricsResponse(clusterName, null);
+
+            return new NodePrometheusMetricsResponse(clusterHealthFormattedText, nodesStatsFormattedText);
         }
     }
 }

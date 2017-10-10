@@ -1,15 +1,13 @@
 package org.elasticsearch.rest.action.prometheus;
 
 import org.compuscene.metrics.prometheus.PrometheusMetricsCollector;
-import org.elasticsearch.action.NodePrometheusMetrics;
-import org.elasticsearch.action.NodePrometheusMetricsRequest;
 import org.elasticsearch.action.NodePrometheusMetricsResponse;
+import org.elasticsearch.action.NodePrometheusMetricsRequest;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.rest.*;
 import org.elasticsearch.rest.action.support.RestResponseListener;
-import org.elasticsearch.rest.action.support.RestToXContentListener;
 
 import static org.elasticsearch.rest.RestRequest.Method.GET;
 
@@ -33,16 +31,15 @@ public class RestPrometheusMetricsAction extends BaseRestHandler {
             logger.info(String.format("Received request for Prometheus metrics from %s", request.getRemoteAddress().toString()));
 //        }
 
-        NodePrometheusMetricsRequest metrics = new NodePrometheusMetricsRequest();
-        client.execute(INSTANCE, metrics, new RestResponseListener<NodePrometheusMetricsResponse>(channel) {
+        NodePrometheusMetricsRequest metricsRequest = new NodePrometheusMetricsRequest();
+        client.execute(INSTANCE, metricsRequest, new RestResponseListener<NodePrometheusMetricsResponse>(channel) {
 
             @Override
             public RestResponse buildResponse(NodePrometheusMetricsResponse response) throws Exception {
                 StringBuilder sb = new StringBuilder();
-                sb.append("# Prometheus metrics").append("\n");
-//                for (NodePrometheusMetrics node : response) {
-//                    sb.append(node.getMetrics()).append("\n");
-//                }
+                sb.append("# Prometheus metrics").append("\n")
+                        .append(response.getClusterHealth()).append("\n")
+                        .append(response.getNodeStats());
                 return new BytesRestResponse(RestStatus.OK, sb.toString());
             }
         });

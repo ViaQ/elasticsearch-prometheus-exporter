@@ -1,37 +1,48 @@
 package org.elasticsearch.action;
 
-import org.elasticsearch.action.support.nodes.BaseNodesResponse;
-import org.elasticsearch.cluster.ClusterName;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
 
 import java.io.IOException;
 
-public class NodePrometheusMetricsResponse extends BaseNodesResponse<NodePrometheusMetrics> {
+public class NodePrometheusMetricsResponse extends ActionResponse {
 
-    NodePrometheusMetricsResponse() {
+    private String clusterHealth;
+    private String nodeStats;
+
+    public NodePrometheusMetricsResponse() {
     }
 
-    public NodePrometheusMetricsResponse(ClusterName clusterName, NodePrometheusMetrics[] nodes) {
-        super(clusterName, nodes);
+    public NodePrometheusMetricsResponse(String clusterHealth, String nodesStats) {
+        this.clusterHealth = clusterHealth;
+        this.nodeStats = nodesStats;
+    }
+
+    public String getClusterHealth() {
+        return this.clusterHealth;
+    }
+
+    public String getNodeStats() {
+        return this.nodeStats;
+    }
+
+    public static NodePrometheusMetricsResponse readNodePrometheusMetrics(StreamInput in) throws IOException {
+        NodePrometheusMetricsResponse metrics = new NodePrometheusMetricsResponse();
+        metrics.readFrom(in);
+        return metrics;
     }
 
     @Override
     public void readFrom(StreamInput in) throws IOException {
         super.readFrom(in);
-        nodes = new NodePrometheusMetrics[in.readVInt()];
-        for (int i = 0; i < nodes.length; i++) {
-            nodes[i] = NodePrometheusMetrics.readNodePrometheusMetrics(in);
-        }
+        clusterHealth = in.readString();
+        nodeStats = in.readString();
     }
 
     @Override
     public void writeTo(StreamOutput out) throws IOException {
         super.writeTo(out);
-        out.writeVInt(nodes.length);
-        for (NodePrometheusMetrics node : nodes) {
-            node.writeTo(out);
-        }
+        out.writeString(clusterHealth);
+        out.writeString(nodeStats);
     }
-
 }

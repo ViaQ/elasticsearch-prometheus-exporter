@@ -37,6 +37,7 @@
         <lucene.version>5.5.4</lucene.version>
         <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <prometheus.simpleclient.version>0.0.26</prometheus.simpleclient.version>
     </properties>
 
     <dependencies>
@@ -57,12 +58,12 @@
         <dependency>
             <groupId>io.prometheus</groupId>
             <artifactId>simpleclient</artifactId>
-            <version>0.0.15</version>
+            <version>${prometheus.simpleclient.version}</version>
         </dependency>
         <dependency>
             <groupId>io.prometheus</groupId>
             <artifactId>simpleclient_common</artifactId>
-            <version>0.0.15</version>
+            <version>${prometheus.simpleclient.version}</version>
         </dependency>
 
         <!--
