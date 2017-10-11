@@ -19,12 +19,15 @@ public class PrometheusMetricsCollector {
 
     private String cluster;
     private String node;
+    private String nodeId;
 
     private PrometheusMetricsCatalog catalog;
 
-    public PrometheusMetricsCollector (final String clusterName, final String node) {
+    public PrometheusMetricsCollector (final String clusterName, final String nodeName, final String nameId) {
         this.cluster = clusterName;
-        this.node = node;
+        this.node = nodeName;
+        // TODO: https://github.com/vvanholl/elasticsearch-prometheus-exporter/issues/63
+        this.nodeId = nodeId;
         catalog = new PrometheusMetricsCatalog(cluster, "es_");
         registerMetrics();
     }

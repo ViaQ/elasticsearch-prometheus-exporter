@@ -36,29 +36,17 @@ public class RestPrometheusMetricsAction extends BaseRestHandler {
             public RestResponse buildResponse(NodePrometheusMetricsResponse response) throws Exception {
 
                 String clusterName = response.getClusterHealth().getClusterName();
-                // Why not node ID?
-                // See https://github.com/vvanholl/elasticsearch-prometheus-exporter/issues/63
-                String nodeId = response.getNodeStats().getNode().getName(); // .getId();
+                String nodeName = response.getNodeStats().getNode().getName();
+                String nodeId = response.getNodeStats().getNode().getId();
 
-                logger.info("####### Building prometheus collector for: [{}], [{}]", clusterName, nodeId);
-                PrometheusMetricsCollector collector = new PrometheusMetricsCollector(clusterName, nodeId);
+                if (logger.isTraceEnabled()) {
+                    logger.trace("Prepare new Prometheus metric collector for: [{}], [{}], [{}]", clusterName, nodeId, nodeName);
+                }
+                PrometheusMetricsCollector collector = new PrometheusMetricsCollector(clusterName, nodeName, nodeId);
                 collector.updateMetrics(response.getClusterHealth(), response.getNodeStats());
 
                 return new BytesRestResponse(RestStatus.OK, collector.getCatalog().toTextFormat());
             }
         });
-
-        /*
-        if (collector == null)
-            collector = new PrometheusMetricsCollector(client);
-
-        collector.updateMetrics();
-
-        try {
-            channel.sendResponse(new BytesRestResponse(OK, collector.getCatalog().toTextFormat()));
-        } catch (java.io.IOException e) {
-            channel.sendResponse(new BytesRestResponse(INTERNAL_SERVER_ERROR, ""));
-        }
-        */
     }
 }

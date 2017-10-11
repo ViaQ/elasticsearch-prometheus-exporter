@@ -1,6 +1,5 @@
 package org.elasticsearch.action;
 
-import org.elasticsearch.cluster.ClusterName;
 import org.elasticsearch.prometheus.PrometheusMetricsCollectorService;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
@@ -18,19 +17,17 @@ import org.elasticsearch.transport.TransportService;
 
 public class TransportNodePrometheusMetricsAction extends HandledTransportAction<NodePrometheusMetricsRequest, NodePrometheusMetricsResponse> {
 
-    protected final ClusterName clusterName;
-    protected final PrometheusMetricsCollectorService prometheusService;
-    protected final Client client;
+//    private final PrometheusMetricsCollectorService prometheusService;
+    private final Client client;
 
     @Inject
-    public TransportNodePrometheusMetricsAction(Settings settings, ClusterName clusterName, ThreadPool threadPool, Client client,
+    public TransportNodePrometheusMetricsAction(Settings settings, ThreadPool threadPool, Client client,
                                                 TransportService transportService, ActionFilters actionFilters,
                                                 IndexNameExpressionResolver indexNameExpressionResolver,
                                                 PrometheusMetricsCollectorService prometheusService) {
         super(settings, NodePrometheusMetricsAction.NAME, threadPool, transportService, actionFilters, indexNameExpressionResolver, NodePrometheusMetricsRequest.class);
         this.client = client;
-        this.clusterName = clusterName;
-        this.prometheusService = prometheusService;
+//        this.prometheusService = prometheusService;
     }
 
     @Override
@@ -49,7 +46,7 @@ public class TransportNodePrometheusMetricsAction extends HandledTransportAction
             this.listener = listener;
             this.healthRequest = new ClusterHealthRequest();
             this.nodesStatsRequest = new NodesStatsRequest("_local").all();
-//            this.nodesStatsRequest = new NodesStatsRequest("_local").clear(); // used for testing only
+//            this.nodesStatsRequest = new NodesStatsRequest("_local").clear(); // used for debugging only
         }
 
         private void start() {
@@ -81,18 +78,8 @@ public class TransportNodePrometheusMetricsAction extends HandledTransportAction
             }
         };
 
-//        protected String buildClusterHealthResponse(ClusterHealthResponse response) {
-//            return response.toString();
-//        }
-
-//        protected String buildNodesStatsResponse(NodesStatsResponse response) {
-//            return response.toString();
-//        }
-
         protected NodePrometheusMetricsResponse buildResponse(ClusterHealthResponse clusterHealth, NodesStatsResponse nodesStats) {
 
-//            String clusterHealthFormattedText = buildClusterHealthResponse(clusterHealth);
-//            String nodesStatsFormattedText = buildNodesStatsResponse(nodesStats);
             NodePrometheusMetricsResponse response = new NodePrometheusMetricsResponse(clusterHealth, nodesStats.getAt(0));
 
             if (logger.isTraceEnabled()) {

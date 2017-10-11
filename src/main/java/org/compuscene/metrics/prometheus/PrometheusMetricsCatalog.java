@@ -1,9 +1,6 @@
 package org.compuscene.metrics.prometheus;
 
-import io.prometheus.client.CollectorRegistry;
-import io.prometheus.client.Counter;
-import io.prometheus.client.Gauge;
-import io.prometheus.client.Summary;
+import io.prometheus.client.*;
 import io.prometheus.client.exporter.common.TextFormat;
 import org.elasticsearch.common.logging.ESLogger;
 import org.elasticsearch.common.logging.ESLoggerFactory;
@@ -19,13 +16,13 @@ public class PrometheusMetricsCatalog {
 
     private String cluster;
     private String metric_prefix;
-    private HashMap metrics;
+    private HashMap<String, SimpleCollector> metrics;
     private CollectorRegistry registry;
 
     public PrometheusMetricsCatalog(String cluster, String metric_prefix) {
         this.cluster = cluster;
         this.metric_prefix = metric_prefix;
-        metrics = new HashMap();
+        metrics = new HashMap<>();
         registry = new CollectorRegistry();
     }
 

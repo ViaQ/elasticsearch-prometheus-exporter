@@ -19,7 +19,8 @@ public class PrometheusMetricsCollectorService extends AbstractLifecycleComponen
     @Inject
     public PrometheusMetricsCollectorService(final Settings settings, ClusterName clusterName) {
         super(settings);
-        this.collector = new PrometheusMetricsCollector(clusterName.toString(), nodeName());
+        // TODO: get nodeId
+        this.collector = new PrometheusMetricsCollector(clusterName.toString(), nodeName(),"nodeId");
     }
 
 //    public String getMetrics() {
