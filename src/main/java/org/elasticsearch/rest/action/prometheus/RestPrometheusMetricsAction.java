@@ -17,8 +17,6 @@ public class RestPrometheusMetricsAction extends BaseRestHandler {
 
     final static String PLUGIN_REST_ENDPOINT = "/_prometheus/metrics";
 
-    private PrometheusMetricsCollector collector;
-
     @Inject
     public RestPrometheusMetricsAction(Settings settings, RestController controller, Client client) {
         super(settings, controller, client);
@@ -36,11 +34,17 @@ public class RestPrometheusMetricsAction extends BaseRestHandler {
 
             @Override
             public RestResponse buildResponse(NodePrometheusMetricsResponse response) throws Exception {
-                StringBuilder sb = new StringBuilder();
-                sb.append("# Prometheus metrics").append("\n")
-                        .append(response.getClusterHealth()).append("\n")
-                        .append(response.getNodeStats());
-                return new BytesRestResponse(RestStatus.OK, sb.toString());
+
+                String clusterName = response.getClusterHealth().getClusterName();
+                // Why not node ID?
+                // See https://github.com/vvanholl/elasticsearch-prometheus-exporter/issues/63
+                String nodeId = response.getNodeStats().getNode().getName(); // .getId();
+
+                logger.info("####### Building prometheus collector for: [{}], [{}]", clusterName, nodeId);
+                PrometheusMetricsCollector collector = new PrometheusMetricsCollector(clusterName, nodeId);
+                collector.updateMetrics(response.getClusterHealth(), response.getNodeStats());
+
+                return new BytesRestResponse(RestStatus.OK, collector.getCatalog().toTextFormat());
             }
         });
 

@@ -161,8 +161,9 @@
                 <inherited>true</inherited>
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
+                    <!--<skipTests>${skip.surefire.tests}</skipTests>-->
                     <excludes>
-                        <exclude>**/*IntegrationTest.java</exclude>
+                        <exclude>**/*IntegTestCase.java</exclude>
                     </excludes>
                     <environmentVariables>
                         <ENV_VAR_EXISTS>value</ENV_VAR_EXISTS>
@@ -177,11 +178,8 @@
                 <configuration>
                     <argLine>-Djava.security.manager -Djava.security.policy=${basedir}/src/it/resources/java.policy</argLine>
                     <includes>
-                        <include>**/*IntegrationTest.java</include>
+                        <include>**/*IntegTestCase.java</include>
                     </includes>
-                    <!--<excludes>-->
-                        <!--<exclude>**/HttpsProxyClientCertAuthenticatorIntegrationTest.java</exclude>-->
-                    <!--</excludes>-->
                 </configuration>
                 <executions>
                     <execution>

@@ -1,5 +1,7 @@
 package org.elasticsearch.action;
 
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
+import org.elasticsearch.action.admin.cluster.node.stats.NodeStats;
 import org.elasticsearch.common.io.stream.StreamInput;
 import org.elasticsearch.common.io.stream.StreamOutput;
 
@@ -7,22 +9,22 @@ import java.io.IOException;
 
 public class NodePrometheusMetricsResponse extends ActionResponse {
 
-    private String clusterHealth;
-    private String nodeStats;
+    private ClusterHealthResponse clusterHealth;
+    private NodeStats nodeStats;
 
     public NodePrometheusMetricsResponse() {
     }
 
-    public NodePrometheusMetricsResponse(String clusterHealth, String nodesStats) {
+    public NodePrometheusMetricsResponse(ClusterHealthResponse clusterHealth, NodeStats nodesStats) {
         this.clusterHealth = clusterHealth;
         this.nodeStats = nodesStats;
     }
 
-    public String getClusterHealth() {
+    public ClusterHealthResponse getClusterHealth() {
         return this.clusterHealth;
     }
 
-    public String getNodeStats() {
+    public NodeStats getNodeStats() {
         return this.nodeStats;
     }
 
@@ -35,14 +37,14 @@ public class NodePrometheusMetricsResponse extends ActionResponse {
     @Override
     public void readFrom(StreamInput in) throws IOException {
         super.readFrom(in);
-        clusterHealth = in.readString();
-        nodeStats = in.readString();
+        clusterHealth = ClusterHealthResponse.readResponseFrom(in);
+        nodeStats = NodeStats.readNodeStats(in);
     }
 
     @Override
     public void writeTo(StreamOutput out) throws IOException {
         super.writeTo(out);
-        out.writeString(clusterHealth);
-        out.writeString(nodeStats);
+        clusterHealth.writeTo(out);
+        nodeStats.writeTo(out);
     }
 }

@@ -1,12 +1,8 @@
 package org.compuscene.metrics.prometheus;
 
 import io.prometheus.client.Summary;
-import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
 import org.elasticsearch.action.admin.cluster.node.stats.NodeStats;
-import org.elasticsearch.action.admin.cluster.node.stats.NodesStatsRequest;
-import org.elasticsearch.action.admin.cluster.node.stats.NodesStatsResponse;
-import org.elasticsearch.client.Client;
 import org.elasticsearch.http.HttpStats;
 import org.elasticsearch.indices.NodeIndicesStats;
 import org.elasticsearch.indices.breaker.AllCircuitBreakerStats;
@@ -21,8 +17,6 @@ import org.elasticsearch.transport.TransportStats;
 
 public class PrometheusMetricsCollector {
 
-//    private final Client client;
-
     private String cluster;
     private String node;
 
@@ -34,22 +28,6 @@ public class PrometheusMetricsCollector {
         catalog = new PrometheusMetricsCatalog(cluster, "es_");
         registerMetrics();
     }
-
-        /*
-    public PrometheusMetricsCollector(final Client client) {
-        this.client = client;
-
-        NodesStatsRequest nodesStatsRequest = new NodesStatsRequest("_local").all();
-        NodesStatsResponse nodesStatsResponse = this.client.admin().cluster().nodesStats(nodesStatsRequest).actionGet();
-
-        cluster = nodesStatsResponse.getClusterNameAsString();
-        node = nodesStatsResponse.getAt(0).getNode().getName();
-
-        catalog = new PrometheusMetricsCatalog(cluster, "es_");
-
-        registerMetrics();
-    }
-        */
 
     private void registerMetrics() {
         catalog.registerSummaryTimer("metrics_generate_time_seconds", "Time spent while generating metrics", "node");
@@ -522,19 +500,10 @@ public class PrometheusMetricsCollector {
         }
     }
 
-    public void updateMetrics() {
+    public void updateMetrics(ClusterHealthResponse clusterHealthResponse, NodeStats nodeStats) {
         Summary.Timer timer = catalog.startSummaryTimer("metrics_generate_time_seconds", node);
-        /*
-
-        ClusterHealthRequest clusterHealthRequest = new ClusterHealthRequest();
-        ClusterHealthResponse clusterHealthResponse = client.admin().cluster().health(clusterHealthRequest).actionGet();
 
         updateClusterMetrics(clusterHealthResponse);
-
-        NodesStatsRequest nodesStatsRequest = new NodesStatsRequest("_local").all();
-        NodesStatsResponse nodesStatsResponse = client.admin().cluster().nodesStats(nodesStatsRequest).actionGet();
-
-        NodeStats nodeStats = nodesStatsResponse.getAt(0);
 
         updateJVMMetrics(nodeStats.getJvm());
         updateIndicesMetrics(nodeStats.getIndices());
@@ -547,7 +516,6 @@ public class PrometheusMetricsCollector {
         updateThreadPoolMetrics(nodeStats.getThreadPool());
         updateFsMetrics(nodeStats.getFs());
 
-        */
         timer.observeDuration();
     }
 

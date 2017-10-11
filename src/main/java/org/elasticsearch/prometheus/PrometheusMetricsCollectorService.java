@@ -22,13 +22,13 @@ public class PrometheusMetricsCollectorService extends AbstractLifecycleComponen
         this.collector = new PrometheusMetricsCollector(clusterName.toString(), nodeName());
     }
 
-    public String getMetrics() {
-        return collector.toString();
-    }
+//    public String getMetrics() {
+//        return collector.toString();
+//    }
 
-    public void updateMetrics() {
-        collector.updateMetrics();
-    }
+//    public void updateMetrics() {
+//        collector.updateMetrics();
+//    }
 
     @Override
     protected void doStart() {
