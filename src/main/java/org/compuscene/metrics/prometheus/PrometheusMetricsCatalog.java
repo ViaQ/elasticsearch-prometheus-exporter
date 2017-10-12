@@ -53,7 +53,8 @@ public class PrometheusMetricsCatalog {
 
         metrics.put(metric, gauge);
 
-        logger.debug(String.format("Registered new gauge %s", metric));
+        if (logger.isDebugEnabled())
+            logger.debug("Registered new gauge [{}]", metric);
     }
 
     public void setGauge(String metric, double value, String... label_values) {
@@ -70,7 +71,8 @@ public class PrometheusMetricsCatalog {
 
         metrics.put(metric, counter);
 
-        logger.debug(String.format("Registered new counter %s", metric));
+        if (logger.isDebugEnabled())
+            logger.debug("Registered new counter [{}]", metric);
     }
 
     public void setCounter(String metric, double value, String... label_values) {
@@ -82,7 +84,7 @@ public class PrometheusMetricsCatalog {
         if (increment >= 0) {
             counter.labels(extended_label_values).inc(increment);
         } else {
-            logger.error(String.format("Can not increment metric %s with value %f, skipping", metric, increment));
+            logger.error("Can not increment metric [{}] with value [{}], skipping", metric, increment);
         }
     }
 
@@ -95,7 +97,8 @@ public class PrometheusMetricsCatalog {
 
         metrics.put(metric, summary);
 
-        logger.debug(String.format("Registered new summary %s", metric));
+        if (logger.isDebugEnabled())
+            logger.debug("Registered new summary [{}]", metric);
     }
 
     public Summary.Timer startSummaryTimer(String metric, String... label_values) {
