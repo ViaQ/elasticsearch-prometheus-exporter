@@ -4,9 +4,6 @@ import org.elasticsearch.action.support.master.MasterNodeReadRequest;
 
 public class NodePrometheusMetricsRequest extends MasterNodeReadRequest<NodePrometheusMetricsRequest> {
 
-//    public NodePrometheusMetricsRequest() {
-//    }
-
     @Override
     public ActionRequestValidationException validate() {
         return null;
