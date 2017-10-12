@@ -57,7 +57,7 @@ public class TransportNodePrometheusMetricsAction extends HandledTransportAction
 
             @Override
             public void onFailure(Throwable throwable) {
-                listener.onFailure(new ElasticsearchException("Nodes stats request failed"));
+                listener.onFailure(new ElasticsearchException("Nodes stats request failed", throwable));
             }
         };
 
@@ -70,18 +70,15 @@ public class TransportNodePrometheusMetricsAction extends HandledTransportAction
 
             @Override
             public void onFailure(Throwable throwable) {
-                listener.onFailure(new ElasticsearchException("Cluster health request failed"));
+                listener.onFailure(new ElasticsearchException("Cluster health request failed", throwable));
             }
         };
 
         protected NodePrometheusMetricsResponse buildResponse(ClusterHealthResponse clusterHealth, NodesStatsResponse nodesStats) {
-
             NodePrometheusMetricsResponse response = new NodePrometheusMetricsResponse(clusterHealth, nodesStats.getAt(0));
-
             if (logger.isTraceEnabled()) {
                 logger.trace("Return response: [{}]", response);
             }
-
             return response;
         }
     }
