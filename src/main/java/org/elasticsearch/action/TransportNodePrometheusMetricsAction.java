@@ -1,6 +1,5 @@
 package org.elasticsearch.action;
 
-import org.elasticsearch.prometheus.PrometheusMetricsCollectorService;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse;
@@ -17,17 +16,14 @@ import org.elasticsearch.transport.TransportService;
 
 public class TransportNodePrometheusMetricsAction extends HandledTransportAction<NodePrometheusMetricsRequest, NodePrometheusMetricsResponse> {
 
-//    private final PrometheusMetricsCollectorService prometheusService;
     private final Client client;
 
     @Inject
     public TransportNodePrometheusMetricsAction(Settings settings, ThreadPool threadPool, Client client,
                                                 TransportService transportService, ActionFilters actionFilters,
-                                                IndexNameExpressionResolver indexNameExpressionResolver,
-                                                PrometheusMetricsCollectorService prometheusService) {
+                                                IndexNameExpressionResolver indexNameExpressionResolver) {
         super(settings, NodePrometheusMetricsAction.NAME, threadPool, transportService, actionFilters, indexNameExpressionResolver, NodePrometheusMetricsRequest.class);
         this.client = client;
-//        this.prometheusService = prometheusService;
     }
 
     @Override
